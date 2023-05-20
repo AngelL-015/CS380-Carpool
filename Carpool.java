@@ -1,16 +1,30 @@
+import java.util.List;
+
 public class Carpool {
 	
 	// Variables
 	private int carpoolID;
 	private int driverID;
-	private int passengerID;
+	private List<Integer> passengerIDs; // Possible! Return array from database.
 	private String pickupLocation;
 	private String destination;
-	private int dateTime;
-	private String status;
+	private String pickupDate;
+	private String pickupTime;
+	private Boolean status;
 	
 	// Constructor
-	public Carpool() {
+	public Carpool(int carpoolID, int driverID, List<Integer> passengerIDs, 
+		String pickupLocation, String destination, String pickupDate, 
+		String pickupTime, Boolean status) {
+			
+		this.carpoolID = carpoolID;
+		this.driverID = driverID;
+		this.passengerIDs = passengerIDs;
+		this.destination = destination;
+		this.pickupDate = pickupDate;
+		this.pickupTime = pickupTime;
+		this.status = status;
+		
 	}
 	
 	// Getters & Setters
@@ -26,8 +40,16 @@ public class Carpool {
 		return driverID;
 	}
 
-	public int getPassengerID() {
-		return passengerID;
+	public void setDriverID(int driverID) {
+		this.driverID = driverID;
+	}
+
+	public List<Integer> getPassengerIDs() {
+		return passengerIDs;
+	}
+
+	public void setPassengerIDs(List<Integer> passengerIDs) {
+		this.passengerIDs = passengerIDs;
 	}
 
 	public String getPickupLocation() {
@@ -46,20 +68,29 @@ public class Carpool {
 		this.destination = destination;
 	}
 
-	public int getDateTime() {
-		return dateTime;
+	public String getPickupDate() {
+		return pickupDate;
 	}
 
-	public void setDateTime(int dateTime) {
-		this.dateTime = dateTime;
+	public void setPickupDate(String pickupDate) {
+		this.pickupDate = pickupDate;
 	}
 
-	public String getStatus() {
+	public String getPickupTime() {
+		return pickupTime;
+	}
+
+	public void setPickupTime(String pickupTime) {
+		this.pickupTime = pickupTime;
+	}
+
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
+	
 
 }
