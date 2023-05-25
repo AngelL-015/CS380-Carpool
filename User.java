@@ -3,7 +3,7 @@ public class User {
 	// Variables
 	//private String username;
 	//private String password;
-	private int ID;
+	private int Id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -11,8 +11,8 @@ public class User {
 	private String address;
 	
 	// Constructor
-	public User(int ID, String firstName, String lastName, String email, String phone, String address) {
-		this.ID = ID;
+	public User(int Id, String firstName, String lastName, String email, String phone, String address) {
+		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -22,11 +22,11 @@ public class User {
 
 	// Getters & Setters
 	public int getID() {
-		return ID;
+		return Id;
 	}
 
-	public void setID(int ID) {
-		this.ID = ID;
+	public void setID(int Id) {
+		this.Id = Id;
 	}
 
 	public String getFirstName() {
