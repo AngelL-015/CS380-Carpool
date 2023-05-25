@@ -1,45 +1,40 @@
 import java.sql.*;
-
+/**
+ * Controls login/signup of User
+ */
 public class ProfileDB {
 	
-	// Variables, Getter, and Setters Remain other changes are made
-	// Remember to delete!
-	
-	// Variables 
-	//private String username;
-	//private String password;
-	private Connection con;
+	// Connection
+	private static Connection con;
 	
 	// Constructor
 	public ProfileDB(Connection con) {
-		//this.username = username;
-		//this.password = password;
 		this.con = con;
 	}
 	
 	// Log In Function
 	public User logIn(String username, String password) throws SQLException { 
 		
-		// Command to get profile // Populate & execute query
-		String query = "select * from profile where username = ? and password = ?";
+		// Command to get profile
+		String query = "select * from profiles where username = ? and password = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setString(1, username);
         pstmt.setString(2, password);
-        ResultSet user = pstmt.executeQuery();
+        ResultSet rslt = pstmt.executeQuery();
             
         // Checks if User exist
-        if (user.next()) {
-        	int userId = user.getInt("passengerId");
-            String firstName = user.getString("firstName");
-            String lastName = user.getString("lastName");
-            String email = user.getString("email");
-            String phone = user.getString("phoneNumber");
-            String address = user.getString("address");
+        if (rslt.next()) {
+        	int userId = rslt.getInt("passengerId");
+            String firstName = rslt.getString("firstName");
+            String lastName = rslt.getString("lastName");
+            String email = rslt.getString("email");
+            String phone = rslt.getString("phoneNumber");
+            String address = rslt.getString("address");
             // Returns User // Unsure to save username & password to User object
             return new User(userId, firstName, lastName, email, phone, address);
         } else {
-            // User does not exist // Change for GUI
-            System.out.print("Does Not Exist");
+            // User does not exist
+            System.out.println("Does Not Exist");
             return null;
         }
         
@@ -49,19 +44,19 @@ public class ProfileDB {
 	public User signUp(int userId, String firstName, String lastName, String email, 
 		String phone, String username, String password, String address) throws SQLException { 
 		
-		// Command to get profile // Populate & execute query
-		String query = "select * from profile where username = ? and password = ?";
+		// Command to get profile
+		String query = "select * from profiles where username = ? and password = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setString(1, username);
 		pstmt.setString(2, password);
-		ResultSet user = pstmt.executeQuery();
+		ResultSet rslt = pstmt.executeQuery();
 		            
 		// Checks If User Exist
-		if (!user.next()) {
+		if (!rslt.next()) {
 			// Insert new User to database
-			query = "insert into profile"
-					+ "(passengerId, firstName, lastName, email, phoneNumber, username, password, address)"
-					+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
+			query = "insert into profiles"
+				+ "(passengerId, firstName, lastName, email, phoneNumber, username, password, address)"
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = con.prepareStatement(query);
 			pstmt.setInt(1, userId);
 			pstmt.setString(2, firstName);
@@ -82,22 +77,21 @@ public class ProfileDB {
 		}	
 		
 	}
-	/**
-	// Getters & Setters
-	public String getUsername() {
-		return username;
-	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	// Gets name of Id
+	public static String getIdName(int userId) throws SQLException {
+		String query = "SELECT * FROM profiles WHERE passengerId = ?";
+		PreparedStatement pstmt = con.prepareStatement(query);
+		pstmt.setInt(1, userId);
+        ResultSet rslt = pstmt.executeQuery();
+	
+        if (rslt.next()) {
+        	String firstName = rslt.getString("firstName");
+            String lastName = rslt.getString("lastName");
+            return firstName + " " + lastName;
+        } else {
+        	return null;
+        }
+        
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	**/
 }
