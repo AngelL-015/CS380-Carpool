@@ -5,7 +5,8 @@ public class Carpool {
 	// Variables
 	private int carpoolID;
 	private int driverID;
-	private List<Integer> passengerIDs; // Possible! Return array from database.
+	private int passengerLimit;
+	private List<Integer> passengerIDs; // Note: Carpool was just created, will be null
 	private String pickupLocation;
 	private String destination;
 	private String pickupDate;
@@ -13,18 +14,19 @@ public class Carpool {
 	private Boolean status;
 	
 	// Constructor
-	public Carpool(int carpoolID, int driverID, List<Integer> passengerIDs, 
+	public Carpool(int carpoolID, int driverID, int passengerLimit, List<Integer> passengerIDs, 
 		String pickupLocation, String destination, String pickupDate, 
 		String pickupTime, Boolean status) {
 			
 		this.carpoolID = carpoolID;
 		this.driverID = driverID;
+		this.passengerLimit = passengerLimit;
 		this.passengerIDs = passengerIDs;
+		this.pickupLocation = pickupLocation;
 		this.destination = destination;
 		this.pickupDate = pickupDate;
 		this.pickupTime = pickupTime;
 		this.status = status;
-		
 	}
 	
 	// Getters & Setters
@@ -42,6 +44,14 @@ public class Carpool {
 
 	public void setDriverID(int driverID) {
 		this.driverID = driverID;
+	}
+
+	public int getPassengerLimit() {
+		return passengerLimit;
+	}
+
+	public void setPassengerLimit(int passengerLimit) {
+		this.passengerLimit = passengerLimit;
 	}
 
 	public List<Integer> getPassengerIDs() {
