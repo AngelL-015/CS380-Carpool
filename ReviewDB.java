@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class manages the "reviews" database
+ * Class manages the "reviews" table in the database
  * Adds, Deletes and Updates a review
  */
 public class ReviewDB {
