@@ -1,59 +1,81 @@
 import java.sql.*;
 /**
- * Controls login/signup of User
+ * Class manages the "profiles" table in the database
+ * Class helps user sign-up & login to their Profile.
  */
 public class ProfileDB {
 	
 	// Connection
 	private static Connection con;
 	
-	// Constructor
+	/**
+	 * Constructor of Class. Establishes Connection.
+	 * @param con
+	 */
 	public ProfileDB(Connection con) {
 		this.con = con;
 	}
 	
-	// Log In Function
+	/**
+	 * Function for user to Login to an existing Profile
+	 * @param username - User's username
+	 * @param password - User's password
+	 * @return User's Profile
+	 * @throws SQLException
+	 */
 	public User logIn(String username, String password) throws SQLException { 
 		
-		// Command to get profile
+		// Command to get Profile
 		String query = "select * from profiles where username = ? and password = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setString(1, username);
         pstmt.setString(2, password);
         ResultSet rslt = pstmt.executeQuery();
             
-        // Checks if User exist
+        // Checks if Profile exist
         if (rslt.next()) {
+        	// Retrieves Profile
         	int userId = rslt.getInt("passengerId");
             String firstName = rslt.getString("firstName");
             String lastName = rslt.getString("lastName");
             String email = rslt.getString("email");
             String phone = rslt.getString("phoneNumber");
             String address = rslt.getString("address");
-            // Returns User // Unsure to save username & password to User object
             return new User(userId, firstName, lastName, email, phone, address);
         } else {
-            // User does not exist
-            System.out.println("Does Not Exist");
+            // Profile doesn't exist
+            System.out.println("Profile does not Exist");
             return null;
         }
         
 	}
 	
-	// Sign Up Function
+	/**
+	 * Function creates an Profile for User
+	 * @param userId - The User's ID
+	 * @param firstName - The User's first name
+	 * @param lastName - The User's last name
+	 * @param email - The User's email
+	 * @param phone - The User's phone number
+	 * @param username - The User's username
+	 * @param password - The User's password
+	 * @param address - The User's address
+	 * @return User's created Profile
+	 * @throws SQLException
+	 */
 	public User signUp(int userId, String firstName, String lastName, String email, 
 		String phone, String username, String password, String address) throws SQLException { 
 		
-		// Command to get profile
+		// Command to get Profile
 		String query = "select * from profiles where username = ? and password = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setString(1, username);
 		pstmt.setString(2, password);
 		ResultSet rslt = pstmt.executeQuery();
 		            
-		// Checks If User Exist
+		// Checks if Profile Exist
 		if (!rslt.next()) {
-			// Insert new User to database
+			// Insert new Profile to database
 			query = "insert into profiles"
 				+ "(passengerId, firstName, lastName, email, phoneNumber, username, password, address)"
 				+ " values (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -71,25 +93,37 @@ public class ProfileDB {
 			// Logs user in after signing up
 			return logIn(username, password);
 		} else {
-		    // User does not exist // Change for GUI
+		    // User does not exist
 		    System.out.println("User already Exist");
 		    return null;
 		}	
 		
 	}
-
-	// Gets name of Id
-	public static String getIdName(int userId) throws SQLException {
+	
+	// Function may need to be a Static Function
+	// May not be needed or incorrect place
+	/**
+	 * Functions gets User's name
+	 * @param userId - The User's ID
+	 * @return String name
+	 * @throws SQLException
+	 */
+	public String getNameById(int userId) throws SQLException {
+		
+		// Command to select a profile
 		String query = "SELECT * FROM profiles WHERE passengerId = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setInt(1, userId);
         ResultSet rslt = pstmt.executeQuery();
 	
+        // Checks if Profile Exist
         if (rslt.next()) {
+        	// Returns User's Name
         	String firstName = rslt.getString("firstName");
             String lastName = rslt.getString("lastName");
             return firstName + " " + lastName;
         } else {
+        	// Returns nothing
         	return null;
         }
         
