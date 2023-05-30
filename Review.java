@@ -1,3 +1,6 @@
+/**
+ * Class to build a review
+ */
 public class Review {
 	
 	// Variables
@@ -6,8 +9,18 @@ public class Review {
 	private int rating;
 	private String comment;
 	
-	// Constructor
-	public Review() {	
+	/**
+	 * Constructor to build a Review
+	 * @param driverID - The host's ID
+	 * @param passengerID - The passenger's ID
+	 * @param rating - Passenger's rating for Driver
+	 * @param comment - Passenger's Review for Driver
+	 */
+	public Review(int driverID, int passengerID, int rating, String comment) {	
+		this.driverID = driverID;
+		this.passengerID = passengerID;
+		this.rating = rating;
+		this.comment = comment;
 	}
 	
 	// Getters & Setters
