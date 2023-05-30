@@ -1,8 +1,9 @@
+/**
+ * Class to build User
+ */
 public class User {
 	
 	// Variables
-	//private String username;
-	//private String password;
 	private int Id;
 	private String firstName;
 	private String lastName;
@@ -10,7 +11,15 @@ public class User {
 	private String phone;
 	private String address;
 	
-	// Constructor
+	/**
+	 * Constructor to build User
+	 * @param Id - The User's ID
+	 * @param firstName - The User's first name
+	 * @param lastName - The User's last name
+	 * @param email - The User's email
+	 * @param phone - The User's phone number
+	 * @param address  - The User's address
+	 */
 	public User(int Id, String firstName, String lastName, String email, String phone, String address) {
 		this.Id = Id;
 		this.firstName = firstName;
