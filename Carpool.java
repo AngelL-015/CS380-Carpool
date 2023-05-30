@@ -1,19 +1,33 @@
 import java.util.List;
 
+/**
+ * Class to build a Carpool
+ */
 public class Carpool {
 	
 	// Variables
 	private int carpoolID;
 	private int driverID;
 	private int passengerLimit;
-	private List<Integer> passengerIDs; // Note: Carpool was just created, will be null
+	private List<Integer> passengerIDs;
 	private String pickupLocation;
 	private String destination;
 	private String pickupDate;
 	private String pickupTime;
 	private Boolean status;
 	
-	// Constructor
+	/**
+	 * Constructor to build Carpool
+	 * @param carpoolID - The Carpool's ID
+	 * @param driverID - The Driver's ID
+	 * @param passengerIDs - Are passenger IDs of attendants 
+	 * @param passengerLimit - Total passengers Carpool can carry
+	 * @param pickupLocation - Pickup location for Carpool
+	 * @param destination - Destination for Carpool
+	 * @param pickupDate - Pickup date for Carpool
+	 * @param pickupTime - Pickup time for Carpool
+	 * @param status - Carpool's availability 
+	 */
 	public Carpool(int carpoolID, int driverID, int passengerLimit, List<Integer> passengerIDs, 
 		String pickupLocation, String destination, String pickupDate, 
 		String pickupTime, Boolean status) {
