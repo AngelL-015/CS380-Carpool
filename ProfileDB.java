@@ -108,7 +108,7 @@ public class ProfileDB {
 	 * @return String name
 	 * @throws SQLException
 	 */
-	public String getNameById(int userId) throws SQLException {
+	public static String getNameById(int userId) throws SQLException {
 		
 		// Command to select a profile
 		String query = "SELECT * FROM profiles WHERE passengerId = ?";
@@ -128,4 +128,5 @@ public class ProfileDB {
         }
         
 	}
+	
 }
