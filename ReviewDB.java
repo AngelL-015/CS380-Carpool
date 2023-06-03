@@ -125,7 +125,7 @@ public class ReviewDB {
 		reviews.clear();
 				
 		// Command selects every profile in database 
-		String query = "SELECT * FROM profiles";
+		String query = "SELECT * FROM reviews";
 		Statement stmt = con.createStatement();
 		ResultSet rslt = stmt.executeQuery(query);
 				

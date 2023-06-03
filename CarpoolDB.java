@@ -6,20 +6,41 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Class manages the "carpools" & "carpoolPassenger" tables in the database
+ */
 public class CarpoolDB {
 
 	// Variables
 	private Connection con;
-	private List<Carpool> carpools; // Stores all existing carpools in database
-	//private DatabaseSortingUtils sortingUtils; // May Add Later, Difficult To handle through SQL
+	private List<Carpool> carpools;
+	//private DBSortingUtils sortingUtils;
 	
+	
+	/**
+	 * Constructor of class. Manages and retrieves Carpools.
+	 * @param con
+	 */
 	public CarpoolDB(Connection con) {
 		this.con = con;
 		carpools = new ArrayList<>();
-		//this.sortingUtils = new DatabaseSortingUtils(con);
+		//this.sortingUtils = new DBSortingUtils(con);
 	}
 	
-	// Adds a carpool
+	
+	/**
+	 * Function adds Carpool to "carpools" table in database
+	 * @param carpoolId - The Carpool's ID
+	 * @param driverId - The Driver's ID
+	 * @param passengerIDs - Are passenger IDs of attendants 
+	 * @param passengerLimit - Total passengers Carpool can carry
+	 * @param pickupLocation - Pickup location for Carpool
+	 * @param destination - Destination for Carpool
+	 * @param pickupDate - Pickup date for Carpool
+	 * @param pickupTime - Pickup time for Carpool
+	 * @param status - Carpool's availability 
+	 * @throws SQLException
+	 */
 	public void addCarpool(int carpoolId, int driverId, int passengerLimit, List<Integer> passengerIDs,
 		String pickupLocation, String destination, String pickupDate, String pickupTime, Boolean status) throws SQLException {
 		
@@ -29,9 +50,10 @@ public class CarpoolDB {
 		pstmt.setInt(1, carpoolId);
 		ResultSet rslt = pstmt.executeQuery();
 		
+		// Checks if Carpool exist
 		if (!rslt.next()) {
 			
-			// Carpool does not exist, adds a new carpool
+			// Adds Carpool to database
 			query = "INSERT INTO carpools (carpoolId, driverId, passengerLimit, pickupLocation, destination, pickupDate, pickupTime, carpoolStatus) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = con.prepareStatement(query);
@@ -63,44 +85,61 @@ public class CarpoolDB {
 		
 	}
 
-	// Deletes a carpool
+	
+	/**
+	 * Function deletes selected Carpool from database 
+	 * @param carpoolId - The Carpool's ID
+	 * @throws SQLException
+	 */
 	public void deleteCarpool(int carpoolId) throws SQLException {
-		// Command to delete a Carpool from carpools table(1st table)
+		
+		// Deletes a Carpool from "carpools" table
 		String query = "DELETE FROM carpools WHERE carpoolId = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setInt(1, carpoolId);
 		int rowsAffected = pstmt.executeUpdate();
 				
-		// Checks if Carpool ID is in use
+		// Checks If changes occur
 		if (rowsAffected > 0) {
-			// Carpool associated with id is deleted
-			System.out.println("Deleted from 1st DataBase Table!"); 
+			// Carpool has been deleted
+			System.out.println("Deleted from 1st Table!"); 
 		} else {
 			// Carpool does not exist
-			System.out.println("Carpool Does not exist DataBase!"); 
+			System.out.println("Carpool Doesn't exist!"); 
 		}
 		
-		// Command to delete a Carpool from carpoolpassenger(2nd table)
+		// Delete Carpool passengers from "carpoolpassenger" table
 		query = "DELETE FROM carpoolpassenger WHERE carpoolId = ?";
 		pstmt = con.prepareStatement(query);
 		pstmt.setInt(1, carpoolId);
 		rowsAffected = pstmt.executeUpdate(); 
 		
+		// Checks If changes occur
 		if (rowsAffected > 0) {
-			// Carpool associated with id is deleted
+			// Carpool passengers deleted
 			System.out.println("Deleted from 2nd DataBase Table!"); 
 		} else {
-			// Carpool does not exist
-			System.out.println("Carpool does not exist OR there are no passengers!"); 
+			// Carpool passengers do not exist OR no passengers exist
+			System.out.println("Changes already applied OR did not exist!"); 
 		}
 		
 	}
 	
-	// Updates a carpool, only the certain variables
+	
+	/**
+	 * Function Updates the main aspects of the Carpool
+	 * @param carpoolId - The Carpool's ID
+	 * @param passengerLimit - Total passengers Carpool can carry
+	 * @param pickupLocation - Pickup location for Carpool
+	 * @param destination - Destination for Carpool
+	 * @param pickupDate - Pickup date for Carpool
+	 * @param pickupTime - Pickup time for Carpool
+	 * @throws SQLException
+	 */
 	public void updateCarpool(int carpoolId, int passengerLimit, String pickupLocation,
 		String destination, String pickupDate, String pickupTime) throws SQLException {
 		
-		// Command to get Carpool // Populate & execute query
+		// Selected Carpool is updated
 		String query = "UPDATE carpools SET passengerLimit = ?, pickupLocation = ?, destination = ?, pickupDate = ?, pickupTime = ? "
 			+ "WHERE carpoolId = ?";
 		PreparedStatement pstmt = con.prepareStatement(query);
@@ -112,27 +151,32 @@ public class CarpoolDB {
 		pstmt.setInt(6, carpoolId);
 		int rowsAffected = pstmt.executeUpdate();		
 		
+		// Checks If changes occur
 		if (rowsAffected > 0) {
 			// Carpool has been updated
 			System.out.println("Carpool has been Updated!");			
 		} else {
-			// Carpool does not exist
+			// Carpool doesn't exist
 			System.out.println("Carpool does not exist!"); 
 		}
 	}
 	
-	// Gets Car pool List // Empties list each call to get most updated // Change here?
+	
+	/**
+	 * Function updates carpools ArrayList.
+	 * @throws SQLException
+	 */
 	public void updateCarpoolList() throws SQLException {
 		
 		// Clears current ArrayList
 		carpools.clear();
 		
-		// Command to select every carpool 
+		// Command selects every carpool in database 
 		String query = "SELECT * FROM carpools";
 		Statement stmt = con.createStatement();
 		ResultSet rslt = stmt.executeQuery(query);
 		
-		// Checks if User exist
+		// Gets and stores Carpools
 		while (rslt.next()) {
 			int carpoolId = rslt.getInt("carpoolId");
 		    int driverId = rslt.getInt("driverId");
@@ -143,6 +187,7 @@ public class CarpoolDB {
 		    String pickupTime = rslt.getString("pickupTime");
 		    Boolean carpoolStatus = rslt.getBoolean("carpoolStatus");
 		    
+		    // Gets and stores the Carpool's passengers
 		    String query2 = "select * from carpoolpassenger where carpoolId = ?";
 		    PreparedStatement pstmt = con.prepareStatement(query2);
 		    pstmt.setInt(1, carpoolId);
@@ -163,35 +208,53 @@ public class CarpoolDB {
 		
 	}
 	
-	// Gets carpool List, Can Combine with updateCarpoolList() if wanted
+	
+	/**
+	 * Function returns an ArrayList of all carpools.
+	 * @return ArrayList of Carpools
+	 * @throws SQLException
+	 */
 	public List<Carpool> getCarpoolList() throws SQLException {
-		updateCarpoolList(); // Updates before getting list // Over thinking?
+		updateCarpoolList(); // Updates Carpool ArrayList
 		return carpools;
 	}
 	
-	// Possibly delete The following - Retrieves specific ArrayList 
+	
+	/**
+	 * Function returns an ArrayList of Carpools where user ID is a driver.
+	 * @param userId - The User's ID
+	 * @return an arrayList of Carpools that User ID is in as a driver
+	 * @throws SQLException
+	 */
 	public List<Carpool> getCarpoolsAsDriver(int userId) throws SQLException {
 		
+		// Updates Carpool ArrayList
 		updateCarpoolList();
 		
+		// Populates and returns array
 		List<Carpool> hosted = new ArrayList<Carpool>();
-		
 		for (Carpool element:carpools) {
 			if ( userId == element.getDriverID()) {
 				hosted.add(element);
 			}
 		}
-		
 		return hosted;
 	}
 	
-	// Gets Carpools where user is a passenger
+	
+	/**
+	 * Function returns an ArrayList of carpools where user ID is a passenger.
+	 * @param userId - The User's ID
+	 * @return an arrayList of Carpools that User ID is in as a passenger
+	 * @throws SQLException
+	 */
 	public List<Carpool> getCarpoolsAsPassenger(int userId) throws SQLException {
 		
+		// Updates Carpool ArrayList
 		updateCarpoolList();
 		
+		// Populates and returns array
 		List<Carpool> asPassenger = new ArrayList<Carpool>();
-			
 		for (Carpool element:carpools) {
 			for (Integer passengers:element.getPassengerIDs()) {
 				if (userId == passengers ) {
@@ -199,15 +262,18 @@ public class CarpoolDB {
 				}
 			}
 		}
-		
 		return asPassenger;
 	}
-	// Additional Functions - May move to a different class
 	
-	// Update Passenger status
+	
+	/**
+	 * Function Updates Carpool Status based on attending Passengers.
+	 * @param carpoolId - The Carpool's ID
+	 * @throws SQLException
+	 */
 	public void updatePassengerStatus(int carpoolId) throws SQLException {
 		
-		// Command to update CarpoolStatus
+		// Command to update CarpoolStatus. If passengers > limit, sets false.
 		String query = "UPDATE carpools AS cp "
 			+ "SET carpoolStatus = ("
 			+ "SELECT COUNT(*) > cp.passengerLimit "
@@ -222,10 +288,15 @@ public class CarpoolDB {
 	}
 	
 	
-	// Adds passenger to a carpool
+	/**
+	 * Function adds passenger to Carpool
+	 * @param carpoolId - The Carpool's ID
+	 * @param passengerId - The Passenger's ID
+	 * @throws SQLException
+	 */
 	public void addPassenger(int carpoolId, int passengerId) throws SQLException  {
 		
-		// Command to insert Carpool passenger
+		// Command to insert passenger to Carpool
 		String query = "SELECT * FROM carpoolpassenger "
 				+ "WHERE carpoolId = ? AND passengerId = ?"; 
 		PreparedStatement pstmt = con.prepareStatement(query);
@@ -233,28 +304,36 @@ public class CarpoolDB {
 		pstmt.setInt(2, passengerId);
 		ResultSet rslt = pstmt.executeQuery();
 		
+		// Checks if Passenger exist
 		if (!rslt.next()) {
-			// Carpool passenger added
+			
+			// Passenger added to Carpool
 			query = "INSERT INTO carpoolpassenger(carpoolId, passengerId) VALUES (?, ?)";
 			pstmt = con.prepareStatement(query);
 			pstmt.setInt(1, carpoolId);
 			pstmt.setInt(2, passengerId);
 			pstmt.executeUpdate();
 			
-			// Updates Carpool Limit Status
+			// Updates Carpool Status
 			updatePassengerStatus(passengerId);
+			
 		} else {
-			// Carpool passenger already Exist
-			System.out.println("Carpool passenger already exist"); 
+			// Passenger already Exist
+			System.out.println("Passenger already exist"); 
 		}		
 		
 	}
 	
 	
-	// Deletes passenger from carpool
+	/**
+	 * Function deletes passenger from Carpool
+	 * @param carpoolId - The Carpool's ID
+	 * @param passengerId - The Passenger's ID
+	 * @throws SQLException
+	 */
 	public void deletePassenger(int carpoolId, int passengerId) throws SQLException  {
 		
-		// Command to delete Carpool passenger
+		// Command to delete passenger from Carpool
 		String query = "DELETE FROM carpoolpassenger WHERE carpoolId = ? AND passengerId = ?"; 
 		PreparedStatement pstmt = con.prepareStatement(query);
 		pstmt.setInt(1, carpoolId);
@@ -262,15 +341,13 @@ public class CarpoolDB {
 		int rowsAffected = pstmt.executeUpdate();
 			
 		if (rowsAffected > 0) {
-			// Carpool was found and deleted
+			// Passenger was deleted
 			updatePassengerStatus(passengerId);
 		} else {
-			// Carpool does not exist
+			// Passenger does not exist
 			System.out.println("Carpool Does not Exist"); 
 		}
 		
 	}
 	
-		
-
 }
