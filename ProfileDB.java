@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Class manages the "profiles" table in the database
  * Class helps user sign-up & login to their Profile.
@@ -7,6 +9,7 @@ public class ProfileDB {
 	
 	// Connection
 	private static Connection con;
+	private List<User> profiles;
 	
 	/**
 	 * Constructor of Class. Establishes Connection.
@@ -128,5 +131,44 @@ public class ProfileDB {
         }
         
 	}
+	
+	
+	/**
+	 * Function Populates the profile array list
+	 * @throws SQLException
+	 */
+	public void populateProfiles() throws SQLException {
+		// Clears current ArrayList
+		profiles.clear();
+				
+		// Command selects every profile in database 
+		String query = "SELECT * FROM profiles";
+		Statement stmt = con.createStatement();
+		ResultSet rslt = stmt.executeQuery(query);
+				
+		// Gets and stores User
+		while (rslt.next()) {
+			int passengerId = rslt.getInt("passengerId");
+			String firstName = rslt.getString("firstName");
+			String lastName = rslt.getString("lastName");
+			String email = rslt.getString("email");
+			String phoneNumber = rslt.getString("phoneNumber");
+			String address = rslt.getString("address");
+		    
+			// Creates & Adds User to ArrayList
+		    User user = new User (passengerId, firstName, lastName, email, phoneNumber, address);
+			    profiles.add(user);
+		}
+	}
+	
+	// Getter
+	public List<User> getProfiles() {
+		// Returns profile
+		return profiles;
+	}
+	
+	
+	
+	
 	
 }
