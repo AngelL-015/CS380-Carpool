@@ -17,6 +17,7 @@ public class ProfileDB {
 	 */
 	public ProfileDB(Connection con) {
 		this.con = con;
+		profiles = new ArrayList<>();
 	}
 	
 	/**
