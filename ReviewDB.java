@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ReviewDB {
 	
 	// Variables
 	private Connection con;
-	private List<Review> reviews;;
+	private List<Review> reviews;
 	
 	/**
 	 * Constructor of Class
@@ -113,4 +114,38 @@ public class ReviewDB {
 				System.out.println("Review Doesn't Exist!"); 
 			}
 		}
+
+	
+	/**
+	 * Function Populates the reviews array list
+	 * @throws SQLException
+	 */
+	public void populateReviews() throws SQLException {
+		// Clears current ArrayList
+		reviews.clear();
+				
+		// Command selects every profile in database 
+		String query = "SELECT * FROM profiles";
+		Statement stmt = con.createStatement();
+		ResultSet rslt = stmt.executeQuery(query);
+				
+		// Gets and stores Review
+		while (rslt.next()) {
+			int driverId = rslt.getInt("driverId");
+			int passengerId = rslt.getInt("passengerId");
+			int rating = rslt.getInt("rating");
+			String comment = rslt.getString("comment");
+		    
+			// Creates & Adds Review to ArrayList
+		    Review review = new Review(driverId, passengerId, rating, comment);
+			    reviews.add(review);
+		}
+	}
+	
+	// Getter
+	public List<Review> getProfiles() {
+		// Returns reviews
+		return reviews;
+	}
+	
 }
