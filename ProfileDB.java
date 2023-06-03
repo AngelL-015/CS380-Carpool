@@ -163,8 +163,9 @@ public class ProfileDB {
 	}
 	
 	// Getter
-	public List<User> getProfiles() {
-		// Returns profile
+	public List<User> getProfileList() throws SQLException {
+		// Updates profile and returns profile
+		populateProfiles();
 		return profiles;
 	}
 	

@@ -143,8 +143,9 @@ public class ReviewDB {
 	}
 	
 	// Getter
-	public List<Review> getProfiles() {
-		// Returns reviews
+	public List<Review> getReviewList() throws SQLException {
+		// Updates reviews and returns reviews
+		populateReviews();
 		return reviews;
 	}
 	
